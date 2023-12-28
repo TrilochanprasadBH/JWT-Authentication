@@ -7,10 +7,12 @@ const jwt = require("jsonwebtoken");
 const rateLimit = require("express-rate-limit");
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minute allowed
+    windowMs: 20 * 60 * 1000, // 20 minute allowed
     max: 100,  //100 req per window is allowed
   });
-  userRouter.use(limiter);
+  
+  userRouter.use(limiter); 
+  //this ensures that robotic brute breaking of website is avoided 
 
 //these are my routes for login and signup 
 
@@ -59,7 +61,7 @@ userRouter.post("/login", async(req,res)=>{
                     if(result){
                         //username here is random payload given by me 
                         var token = jwt.sign({ username: user.username  }, process.env.JWT_SecretKey,{
-                            expiresIn: '15m'
+                            expiresIn: '20m'
                             //token expiry 
                         });
                         
