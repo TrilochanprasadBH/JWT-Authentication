@@ -57,6 +57,7 @@ userRouter.post("/login", async(req,res)=>{
             bcrypt.compare(password, user.password, (err, result)=> {
                 //if the result is true then 
                     if(result){
+                        //username here is random payload given by me 
                         var token = jwt.sign({ username: user.username  }, process.env.JWT_SecretKey,{
                             expiresIn: '15m'
                             //token expiry 
