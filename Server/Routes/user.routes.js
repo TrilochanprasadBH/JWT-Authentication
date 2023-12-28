@@ -5,6 +5,7 @@ const bcrypt= require("bcrypt");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const rateLimit = require("express-rate-limit");
+const {auth}= require("../middleware/auth.middleware");
 
 const limiter = rateLimit({
     windowMs: 20 * 60 * 1000, // 20 minute allowed
@@ -63,7 +64,7 @@ userRouter.post("/login", async(req,res)=>{
                         var token = jwt.sign({ username: user.username  }, process.env.JWT_SecretKey,{
                             expiresIn: '20m'
                             //token expiry 
-                        });
+                        }); 
                         
                         res.status(200).json({msg:"login successful", token:token});
                     }else{
@@ -78,6 +79,8 @@ userRouter.post("/login", async(req,res)=>{
         res.status(400).json({error:error.message})
     }
 })
+
+
 
 
 module.exports={
