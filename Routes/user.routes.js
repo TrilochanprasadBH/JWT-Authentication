@@ -20,7 +20,7 @@ const limiter = rateLimit({
 userRouter.post("/signup", async(req,res)=>{
     const {name, username, email, password, phone}= req.body 
     try {
-        let existingUser  = await UserModel.findOne({email});
+        let existingUser  = await UserModel.findOne({email}).timeout(20000) ;
         if(existingUser){
             res.status(400).json({message:"Email already exists"});
         }else{
