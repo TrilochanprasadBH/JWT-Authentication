@@ -1,25 +1,19 @@
 const express = require("express");
 const {connection} = require("./config/db");
+const {userRouter} = require("./Routes/user.routes");
+require("dotenv").config();
 
 const app = express();
 app.use(express.json()); 
-
-//these are my routes for login and signup 
-
-app.post("/signup", async(req,res)=>{
-    
-})
+app.use("/users", userRouter);
 
 
-app.post("login", async(req,res)=>{
-
-})
 
 
-app.listen(8080,async()=>{
+app.listen(process.env.PORT,async()=>{
     try {
         await connection
-        console.log(`port is running on 8080 , connected to Db`)
+        console.log(`port is running on ${process.env.PORT} , connected to Db`)
     } catch (error) {
      console.log(error,"something went wrong");   
     }
