@@ -1,2 +1,2 @@
 # JWT-Authentication
-To implement JWT authentication for Signup and Login routes and UI for the same. 
+To implement JWT authentication for Signup and Login routes using Node, Express, Mongoose, Javascript   
