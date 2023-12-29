@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const rateLimit = require("express-rate-limit");
 const {auth}= require("../middleware/auth.middleware");
 const mongoose= require("mongoose");
+const {blacklist} = require("../config/blacklist");
 
 const limiter = rateLimit({
     windowMs: 20 * 60 * 1000, // 20 minute allowed
@@ -20,8 +21,7 @@ const limiter = rateLimit({
 
 userRouter.post("/signup", async(req,res)=>{
     const {name, username, email, password, phone}= req.body 
-    console.log(email);
-    var mongoose = require("mongoose");
+    // console.log(email);
     console.log(mongoose.connection.readyState, "mongoose check");
     try {
         let existingUser  = await UserModel.findOne({email}) ; 
@@ -66,7 +66,7 @@ userRouter.post("/login", async(req,res)=>{
                 //if the result is true then 
                     if(result){
                         //username here is random payload given by me 
-                        var token = jwt.sign({ username: user.username  }, process.env.JWT_SecretKey,{
+                        var token = jwt.sign({ username: user.username  }, process.env.SECRET,{
                             expiresIn: '20m'
                             //token expiry 
                         }); 
@@ -86,6 +86,17 @@ userRouter.post("/login", async(req,res)=>{
 })
 
 
+userRouter.get("/logout",auth, async(req,res)=>{
+    const token= req.headers.authorization?.split(" ")[1];
+        console.log(token, "token in logout");
+        try {
+            blacklist.push(token);
+            console.log(token,"blaklisted token");
+            res.status(200).json({message:"please login again, user logged out"})
+        } catch (error) {
+            res.status(500).json({message:error.message});
+        }
+})
 
 
 module.exports={

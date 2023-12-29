@@ -1,14 +1,18 @@
 const jwt = require("jsonwebtoken");
+const {blacklist} = require("../config/blacklist");
 
 require("dotenv").config();
 
 const auth =(req,res,next)=>{
    const token= req.headers.authorization?.split(" ")[1];
-   console.log(token);
+   console.log(token,"token chekc in auth");
+   console.log(blacklist, "blacklist in auth");
     if(token){
-    
+            if(blacklist.includes(token)){
+                res.json({message:"please login again"});
+            }
             try {
-                const decoded = jwt.verify(token, process.env.JWT_SecretKey)
+                const decoded = jwt.verify(token, process.env.SECRET)
                 if(decoded){
                     next()
                 }else{
@@ -18,9 +22,8 @@ const auth =(req,res,next)=>{
                 res.json({message:error.message});
             }
         
-        
-    }else{
-        res.json({message:"Kindly ,first Login to get access"})
+        }else{
+        res.json({message:"Kindly, login first! "})
     }
     
 }
