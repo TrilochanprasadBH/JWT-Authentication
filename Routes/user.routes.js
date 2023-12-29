@@ -6,6 +6,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const rateLimit = require("express-rate-limit");
 const {auth}= require("../middleware/auth.middleware");
+const mongoose= require("mongoose");
 
 const limiter = rateLimit({
     windowMs: 20 * 60 * 1000, // 20 minute allowed
@@ -20,9 +21,11 @@ const limiter = rateLimit({
 userRouter.post("/signup", async(req,res)=>{
     const {name, username, email, password, phone}= req.body 
     console.log(email);
+    var mongoose = require("mongoose");
+    console.log(mongoose.connection.readyState, "mongoose check");
     try {
         let existingUser  = await UserModel.findOne({email}) ; 
-        console.log(existingUser);
+        console.log(existingUser, "exi user");
         if(existingUser){
             res.status(400).json({message:"Email already exists"});
         }else{
